@@ -3,11 +3,8 @@ package com.pheenixm.betterbeacons;
 import org.bukkit.Material;
 
 /**
- * OreGinProperties.java
- * Purpose: Object for holding tier-specific OreGin Properties
  *
- * @author MrTwiggy
- * @version 0.1 1/08/13
+ * @author Pheenixm
  */
 public class BetterBeaconsProperties 
 {
@@ -17,7 +14,7 @@ public class BetterBeaconsProperties
 	/**
 	 * Constructor
 	 */
-	public BetterBeaconsProperties(int i, int fuel_amount, Material fuel_material)
+	public BetterBeaconsProperties(int fuel_amount, Material fuel_material)
 	{
 		this.fuel_amount = fuel_amount;
 		this.fuel_material = fuel_material;
