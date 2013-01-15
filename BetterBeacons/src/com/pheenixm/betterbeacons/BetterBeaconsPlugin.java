@@ -7,10 +7,11 @@ import java.util.logging.Logger;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitTask;
 
 public class BetterBeaconsPlugin extends JavaPlugin 
 {
-	BetterBeaconsManager manager; //The BetterBeacons manager
+	private BetterBeaconsManager manager; //The BetterBeacons manager
 	public static Logger log;
 	public static HashMap<Integer,BetterBeaconsProperties> Better_Beacons_Properties; //Map of properties for all tiers
 
@@ -75,6 +76,17 @@ public class BetterBeaconsPlugin extends JavaPlugin
 	}
 	
 	/**
+	 * Sets up scheduling for the ticking
+	 */
+	BukkitTask task = getServer().getScheduler().runTaskTimerAsynchronously(this, new Runnable() {
+	    @Override  
+	    public void run() {
+	    	manager.iterate();
+	    }
+	}, 1L, 1L);
+
+	
+	/**
 	 * Returns the BetterBeacons Saves file
 	 */
 	public File getBetterBeaconsSavesFile()
@@ -98,6 +110,11 @@ public class BetterBeaconsPlugin extends JavaPlugin
 	public static void sendConsoleMessage(String message)
 	{
 		Bukkit.getLogger().info(BetterBeaconsPlugin.PLUGIN_PREFIX + message);
+	}
+	
+	public BetterBeaconsManager getManager()
+	{
+		return manager;
 	}
 
 }

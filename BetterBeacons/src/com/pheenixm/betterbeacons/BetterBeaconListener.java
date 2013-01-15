@@ -1,6 +1,11 @@
 package com.pheenixm.betterbeacons;
 
+import net.minecraft.server.v1_4_6.Block;
+
+import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 
 public class BetterBeaconListener implements Listener {
 
@@ -10,5 +15,40 @@ public class BetterBeaconListener implements Listener {
 	public BetterBeaconListener(BetterBeaconsPlugin plugin) {
 		instance = plugin;
 	}
+	
+    @EventHandler
+    public void onBlockInteract(PlayerInteractEvent event)
+    {
+    	org.bukkit.block.Block block = event.getClickedBlock();
+    	if(block.equals(Block.BEACON))
+    	{
+    		if(!hasSave(block.getX(), block.getY(), block.getZ()))
+    		{
+    			BetterBeacons beacon = new BetterBeacons(instance, block.getX(), block.getY(), block.getZ());
+    			instance.getManager().tickList.add(beacon);
+    		}
+    	}
+    }
+    
+    public void onBlockRemoved(BlockBreakEvent event)
+    {
+    	org.bukkit.block.Block block = event.getBlock();
+    	if(block.equals(Block.BEACON))
+    	{
+    		for(BetterBeacons beacon : instance.getManager().tickList)
+    		{
+    			if(block.getX() == beacon.getX() && block.getY() == beacon.getY() && block.getZ() == beacon.getZ())
+    			{
+    				beacon.remove();
+    			}
+    				
+    		}
+    	}
+    }
 
+    public boolean hasSave(int x, int y, int z)
+    {
+    	//ADD CODE HERE TO GET WHETHER A BEACON OBJECT ALREADY EXISTS AT GIVEN COORDS
+    	return true; //Temporary Measure
+    }
 }
