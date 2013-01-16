@@ -9,22 +9,28 @@ import java.util.Vector;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 
+import com.pheenixm.betterbeacons.data.IBeaconStorage;
+import com.pheenixm.betterbeacons.data.PluginConfigBeaconStorage;
+
 public class BetterBeaconsManager
 {
 
 	private BetterBeaconsPlugin instance;
+    private IBeaconStorage storage;
 	private Map<String, BetterBeacons> tickMap;
 	private Map<UUID, Map<String, BetterBeacons>> worldMap;
 
 	public BetterBeaconsManager(BetterBeaconsPlugin plugin)
 	{
 		instance = plugin;
+        storage = (IBeaconStorage)new PluginConfigBeaconStorage((Plugin)plugin);
         plugin.getServer().getPluginManager().registerEvents(new BetterBeaconListener(plugin), plugin);
         tickMap = new TreeMap<String, BetterBeacons>();
         worldMap = new TreeMap<UUID, Map<String, BetterBeacons>>();
         for (World world : plugin.getServer().getWorlds()) {
             worldMap.put(world.getUID(), new Map<String, BetterBeacons>());
         }
+        loadBeacons();
 	}
 
     public BetterBeacons newBeacon(Block block) {
@@ -32,12 +38,25 @@ public class BetterBeaconsManager
     }
 
     public BetterBeacons newBeacon(Location location) {
+        return newBeacon(location.getWorld().getUID(), location.getBlockX(), location.getBlockY(), location.getBlockZ());
+    }
+
+    public BetterBeacons newBeacon(UUID worldUuid, int x, int y, int z) {
+        BetterBeacons beacn = newBeaconNoSave(worldUuid, x, y, z);
+        save(beacon);
+        return beacon;
+    }
+
+    public BetterBeacons newBeaconNoSave(UUID worldUuid, int x, int y, int z) {
         if (hasSave(location)) {
             return tickMap.get(BetterBeaconsManager.blockKey(location));
         }
-        BetterBeacons beacon = new BetterBeacons(instance, location.getWorld().getUID(), location.getBlockX(), location.getBlockY(), location.getBlockZ());
-        save(beacon);
-        return beacon;
+        return new BetterBeacons(worldUuid, x, y, z);
+    }
+
+    private void loadBeacons() {
+        List<BetterBeacons> beacons = storage.getAll();
+        // TODO: populate tickMap and worldMap
     }
 
 	public void iterate()
@@ -79,11 +98,11 @@ public class BetterBeaconsManager
     public void save(BetterBeacons beacon) {
         tickMap.put(beacon.getKey(), beacon);
         worldMap.get(beacon.getWorldUuid()).put(beacon.getKey(), beacon);
-        // Persist beacon
+        storage.save(beacon);
     }
 
     public void remove(BetterBeacons beacon) {
-        // Remove beacon persistence
+        storage.remove(beacon);
     }
 
     public static String blockKey(Block block) {

@@ -48,6 +48,10 @@ public class BetterBeacons {
         return properties;
     }
 
+    public void setProperties(BetterBeaconsProperties newProperties) {
+        properties = newProperties;
+    }
+
     public String getKey() {
         return beaconKey;
     }
