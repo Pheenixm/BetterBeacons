@@ -1,7 +1,7 @@
 package com.pheenixm.betterbeacons;
 
-import net.minecraft.server.v1_4_6.Block;
-
+import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
@@ -19,8 +19,8 @@ public class BetterBeaconListener implements Listener {
     @EventHandler
     public void onBlockInteract(PlayerInteractEvent event)
     {
-    	org.bukkit.block.Block block = event.getClickedBlock();
-    	if(block.equals(Block.BEACON))
+    	Block block = event.getClickedBlock();
+    	if(block.getType().equals(Material.BEACON))
     	{
     		if(!hasSave(block.getX(), block.getY(), block.getZ()))
     		{
@@ -30,10 +30,11 @@ public class BetterBeaconListener implements Listener {
     	}
     }
     
+    @EventHandler
     public void onBlockRemoved(BlockBreakEvent event)
     {
-    	org.bukkit.block.Block block = event.getBlock();
-    	if(block.equals(Block.BEACON))
+    	Block block = event.getBlock();
+    	if(block.getType().equals(Material.BEACON))
     	{
     		for(BetterBeacons beacon : instance.getManager().tickList)
     		{
