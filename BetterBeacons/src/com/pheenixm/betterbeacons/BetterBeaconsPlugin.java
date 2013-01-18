@@ -68,8 +68,17 @@ public class BetterBeaconsPlugin extends JavaPlugin
 
 		Material fuel_type = Material.valueOf("fuel_type");
 		int fuel_amount= getConfig().getInt("fuel_amount");
-		
-		Better_Beacons_Properties.put(0, new BetterBeaconsProperties(fuel_amount, fuel_type)); //MISSING ARGS
+
+
+
+        // Design conflict, I added Beacon dynamic variables into Properties
+        //  and made the Beacon class itself immutable except for its assigned
+        //  properties. You'll have to decide how to refactor this for your
+        //  vision.
+
+
+
+		Better_Beacons_Properties.put(0, new BetterBeaconsProperties(faction, radius, fuel_amount, fuel_type));
 		
 		BetterBeaconsPlugin.sendConsoleMessage("Config values successfully loaded!");
 		saveConfig();
