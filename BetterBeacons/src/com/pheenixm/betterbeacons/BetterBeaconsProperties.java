@@ -1,6 +1,7 @@
 package com.pheenixm.betterbeacons;
 
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 
 import com.untamedears.citadel.Citadel;
 import com.untamedears.citadel.entity.Faction;

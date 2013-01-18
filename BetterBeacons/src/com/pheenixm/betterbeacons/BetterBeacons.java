@@ -3,6 +3,7 @@ package com.pheenixm.betterbeacons;
 import java.util.List;
 import java.util.UUID;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
 public class BetterBeacons {
@@ -30,7 +31,7 @@ public class BetterBeacons {
 		yMax = yCoord + radius;
 		zMin = zCoord - radius;
 		zMax = zCoord + radius;
-		beaconLocation = new Location(instance.getServer().getWorld(worldUuid), (double)x, (double)y, (double)z, 0.0, 0.0);
+		beaconLocation = new Location(instance.getServer().getWorld(worldUuid), (double)x, (double)y, (double)z);
 	}
 
 	public UUID getWorldUuid() {
@@ -84,7 +85,7 @@ public class BetterBeacons {
 		if (zLoc < zMin || zLoc > zMax) {
 			return false;
 		}
-		return xzDistance(location, beaconLocation) <= (float)radius;
+		return xzDistance(location, beaconLocation) <= (float)radius; //VARIABLE DOES NOT EXIST
 	}
 
 	public float xzDistance(Location one, Location two) {
@@ -95,14 +96,14 @@ public class BetterBeacons {
 		}
 		double dubX = Math.pow(one.getX() - two.getX(), 2);
 		double dubZ = Math.pow(one.getZ() - two.getZ(), 2);
-		return Math.sqrt(dubX + dubZ);
+		return (float) Math.sqrt(dubX + dubZ);
 	}
 
 	public void onUpdate(List<Player> players)
 	{
 		//CODE HERE TO GET GROUP AND APPLY AFFECTS. THE MEAT OF THE PLUGIN
 		for (Player player : players) {
-			if (properties.usePositiveEffect(Player)) {
+			if (properties.usePositiveEffect(player)) { //FUNCTION NON-EXISTENT
 				// Apply positive effect
 
 			} else {

@@ -1,6 +1,8 @@
-package com.pheenixm.betterbeacons;
+package com.pheenixm.betterbeacons.data;
 
 import java.util.List;
+import java.util.UUID;
+
 import com.pheenixm.betterbeacons.BetterBeacons;
 
 public interface IBeaconStorage {

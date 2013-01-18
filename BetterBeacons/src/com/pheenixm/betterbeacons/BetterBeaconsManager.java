@@ -7,7 +7,10 @@ import java.util.UUID;
 import java.util.Vector;
 
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.block.Block;
+import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
 
 import com.pheenixm.betterbeacons.data.IBeaconStorage;
 import com.pheenixm.betterbeacons.data.PluginConfigBeaconStorage;
@@ -22,12 +25,12 @@ public class BetterBeaconsManager
 	public BetterBeaconsManager(BetterBeaconsPlugin plugin)
 	{
 		instance = plugin;
-		storage = (IBeaconStorage)new PluginConfigBeaconStorage((Plugin)plugin);
+		storage = (IBeaconStorage)new PluginConfigBeaconStorage(plugin);
 		plugin.getServer().getPluginManager().registerEvents(new BetterBeaconListener(plugin), plugin);
 		tickMap = new TreeMap<String, BetterBeacons>();
 		worldMap = new TreeMap<UUID, Map<String, BetterBeacons>>();
 		for (World world : plugin.getServer().getWorlds()) {
-			worldMap.put(world.getUID(), new Map<String, BetterBeacons>());
+			worldMap.put(world.getUID(), new Map<String, BetterBeacons>()); //MAP CANNOT BE INSTANTIATED HERE
 		}
 		loadBeacons();
 	}
@@ -41,16 +44,17 @@ public class BetterBeaconsManager
 	}
 
 	public BetterBeacons newBeacon(UUID worldUuid, int x, int y, int z) {
-		BetterBeacons beacn = newBeaconNoSave(worldUuid, x, y, z);
+		BetterBeacons beacon = newBeaconNoSave(worldUuid, x, y, z);
 		save(beacon);
 		return beacon;
 	}
 
 	public BetterBeacons newBeaconNoSave(UUID worldUuid, int x, int y, int z) {
+		Location location = new Location(this.instance.getServer().getWorld(worldUuid), x, y, z);
 		if (hasSave(location)) {
 			return tickMap.get(BetterBeaconsManager.blockKey(location));
 		}
-		return new BetterBeacons(worldUuid, x, y, z);
+		return new BetterBeacons(worldUuid, x, y, z); //CONSTRUCTOR DOES NOT EXIST
 	}
 
 	private void loadBeacons() {
@@ -64,7 +68,8 @@ public class BetterBeaconsManager
 
 	public void iterate()
 	{
-		for(World world : worldMap.keySet()) {
+		for(UUID uuid : worldMap.keySet()) {
+			World world = instance.getServer().getWorld(uuid);
 			List<Player> players = world.getPlayers();
 			Map<String, BetterBeacons> beacons = worldMap.get(world);
 			for (Player player : players) {

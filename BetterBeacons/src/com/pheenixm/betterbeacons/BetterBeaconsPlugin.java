@@ -69,7 +69,7 @@ public class BetterBeaconsPlugin extends JavaPlugin
 		Material fuel_type = Material.valueOf("fuel_type");
 		int fuel_amount= getConfig().getInt("fuel_amount");
 		
-		Better_Beacons_Properties.put(0, new BetterBeaconsProperties(fuel_amount, fuel_type));
+		Better_Beacons_Properties.put(0, new BetterBeaconsProperties(fuel_amount, fuel_type)); //MISSING ARGS
 		
 		BetterBeaconsPlugin.sendConsoleMessage("Config values successfully loaded!");
 		saveConfig();
