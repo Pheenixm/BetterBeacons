@@ -13,25 +13,43 @@ public class BetterBeacons {
 			UUID beaconWorld,
 			int x,
 			int y,
+			int z) {
+		worldUuid = beaconWorld;
+		xCoord = x;
+		yCoord = y;
+		zCoord = z;
+		beaconKey = BetterBeaconsManager.blockKey(this);
+		instance = plugin;
+		beaconLocation = new Location(instance.getServer().getWorld(worldUuid), (double)x, (double)y, (double)z);
+		properties = null;
+		xMin = null;
+		xMax = null;
+		yMin = null;
+		yMax = null;
+		zMin = null;
+		zMax = null;
+    }
+
+	BetterBeacons(
+			BetterBeaconsPlugin plugin,
+			UUID beaconWorld,
+			int x,
+			int y,
 			int z,
 			String faction,
 			int radius,
 			int fuel_amount,
 			Material fuel_material) {
 		worldUuid = beaconWorld;
+        // TODO: As a Location is created, this doesn't need to explicitly track
+        //  x, y, z as it's redundant.
 		xCoord = x;
 		yCoord = y;
 		zCoord = z;
-		properties = new BetterBeaconsProperties(faction, radius, fuel_amount, fuel_material);
 		beaconKey = BetterBeaconsManager.blockKey(this);
 		instance = plugin;
-		xMin = xCoord - radius;
-		xMax = xCoord + radius;
-		yMin = yCoord - radius;
-		yMax = yCoord + radius;
-		zMin = zCoord - radius;
-		zMax = zCoord + radius;
 		beaconLocation = new Location(instance.getServer().getWorld(worldUuid), (double)x, (double)y, (double)z);
+        setProperties(faction, radius, fuel_amount, fuel_material);
 	}
 
 	public UUID getWorldUuid() {
@@ -57,8 +75,18 @@ public class BetterBeacons {
 		return properties;
 	}
 
+	public void setProperties(String faction, int radius, int fuel_amount, Material fuel_material) {
+        setProperties(new BetterBeaconsProperties(faction, radius, fuel_amount, fuel_material));
+    }
+
 	public void setProperties(BetterBeaconsProperties newProperties) {
 		properties = newProperties;
+		xMin = xCoord - properties.getRadius();
+		xMax = xCoord + properties.getRadius();
+		yMin = yCoord - properties.getRadius();
+		yMax = yCoord + properties.getRadius();
+		zMin = zCoord - properties.getRadius();
+		zMax = zCoord + properties.getRadius();
 	}
 
 	public String getKey() {
@@ -85,7 +113,7 @@ public class BetterBeacons {
 		if (zLoc < zMin || zLoc > zMax) {
 			return false;
 		}
-		return xzDistance(location, beaconLocation) <= (float)radius; //VARIABLE DOES NOT EXIST
+		return xzDistance(location, beaconLocation) <= (float)properties.getRadius();
 	}
 
 	public float xzDistance(Location one, Location two) {
@@ -113,18 +141,21 @@ public class BetterBeacons {
 		}
 	}
 
+    // Immutable member variables
 	private final UUID worldUuid;
 	private final int xCoord;
 	private final int yCoord;
 	private final int zCoord;
-	private BetterBeaconsProperties properties;
 	private final String beaconKey;
 	private final BetterBeaconsPlugin instance;
-	private final int xMin;
-	private final int xMax;
-	private final int yMin;
-	private final int yMax;
-	private final int zMin;
-	private final int zMax;
 	private final Location beaconLocation;
+
+    // Mutable member variables
+	private BetterBeaconsProperties properties;
+	private Integer xMin;
+	private Integer xMax;
+	private Integer yMin;
+	private Integer yMax;
+	private Integer zMin;
+	private Integer zMax;
 }
