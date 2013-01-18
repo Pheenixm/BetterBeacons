@@ -30,7 +30,7 @@ public class BetterBeaconsManager
 		tickMap = new TreeMap<String, BetterBeacons>();
 		worldMap = new TreeMap<UUID, Map<String, BetterBeacons>>();
 		for (World world : plugin.getServer().getWorlds()) {
-			worldMap.put(world.getUID(), new Map<String, BetterBeacons>()); //MAP CANNOT BE INSTANTIATED HERE
+			worldMap.put(world.getUID(), new TreeMap<String, BetterBeacons>());
 		}
 		loadBeacons();
 	}
@@ -54,7 +54,7 @@ public class BetterBeaconsManager
 		if (hasSave(location)) {
 			return tickMap.get(BetterBeaconsManager.blockKey(location));
 		}
-		return new BetterBeacons(worldUuid, x, y, z); //CONSTRUCTOR DOES NOT EXIST
+		return new BetterBeacons(this.instance, worldUuid, x, y, z);
 	}
 
 	private void loadBeacons() {

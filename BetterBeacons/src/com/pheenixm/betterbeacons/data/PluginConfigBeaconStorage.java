@@ -13,9 +13,9 @@ import com.pheenixm.betterbeacons.BetterBeaconsProperties;
 import com.pheenixm.betterbeacons.data.IBeaconStorage;
 
 public class PluginConfigBeaconStorage implements IBeaconStorage {
-    private Plugin plugin_;
+    private BetterBeaconsPlugin plugin_;
 
-    public PluginConfigBeaconStorage(Plugin plugin) {
+    public PluginConfigBeaconStorage(BetterBeaconsPlugin plugin) {
         plugin_ = plugin;
         plugin_.getConfig().options().copyDefaults(true);
     }
@@ -28,32 +28,35 @@ public class PluginConfigBeaconStorage implements IBeaconStorage {
         return getConfigSection().contains(beacon.getKey());
     }
 
-    public BetterBeacons get(UUID worldUuid, int x, int y, int z) {
-        String key = BetterBeaconsManager.blockKey(worldUuid, x, y, z);
-        return get(key);
+    public BetterBeacons get(ConfigurationSection cfg) {
+        UUID worldUuid = UUID.fromString(cfg.getString("worldUuid"));
+        int x = cfg.getInt("x");
+        int y = cfg.getInt("y");
+        int z = cfg.getInt("z");
+        return get(worldUuid, x, y, z);
     }
 
-    public BetterBeacons get(String beaconKey) {
+    public BetterBeacons get(UUID worldUuid, int x, int y, int z) {
+        String key = BetterBeaconsManager.blockKey(worldUuid, x, y, z);
         ConfigurationSection root = getConfigSection();
-        ConfigurationSection cfg = root.getConfigurationSection(key); //ERROR
+        ConfigurationSection cfg = root.getConfigurationSection(key);
         if (cfg == null) {
             return null;
         }
-        BetterBeacons beacon = plugin_.getManager().newBeaconNoSave(worldUuid, x, y, z); //ERROR
-        BetterBeaconsProperties properties = new BetterBeaconsProperties(
+        BetterBeacons beacon = plugin_.getManager().newBeaconNoSave(worldUuid, x, y, z);
+        beacon.setProperties(
             cfg.getString("owningFaction"),
             cfg.getInt("radius"),
             cfg.getInt("fuel_amount"),
             Material.getMaterial(cfg.getString("fuelMaterial")));
-        beacon.setProperties(properties);
         return beacon;
     }
 
     public List<BetterBeacons> getAll() {
         List<BetterBeacons> beacons = new LinkedList<BetterBeacons>();
         ConfigurationSection root = getConfigSection();
-        for (String key : root.getKeys) {
-            beacons.add(get(key));
+        for (String key : root.getKeys(false)) {
+            beacons.add(get(root.getConfigurationSection(key)));
         }
         return beacons;
     }
