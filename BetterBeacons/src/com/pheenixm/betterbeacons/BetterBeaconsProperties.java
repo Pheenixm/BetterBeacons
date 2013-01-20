@@ -1,7 +1,11 @@
 package com.pheenixm.betterbeacons;
 
+import java.util.List;
+import java.util.ArrayList;
+
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.potion.PotionEffect;
 
 import com.untamedears.citadel.Citadel;
 import com.untamedears.citadel.entity.Faction;
@@ -16,16 +20,20 @@ public class BetterBeaconsProperties
 	private final int fuel_amount; //The amount of fuel consumed per mining operation
     private final int radius; //Beacons effect radius
     private final Faction owning_faction; // Owning Citadel group
+    private final ArrayList<PotionEffect> positiveEffects;
+    private final ArrayList<PotionEffect> negativeEffects;
 
 	/**
 	 * Constructor
 	 */
-	public BetterBeaconsProperties(String faction, int radius, int fuel_amount, Material fuel_material)
+	public BetterBeaconsProperties(String faction, Integer radius, int fuel_amount, Material fuel_material, ArrayList<PotionEffect> positive, ArrayList<PotionEffect> negative)
 	{
         this.owning_faction = Citadel.getGroupManager().getGroup(faction);
         this.radius = radius;
 		this.fuel_amount = fuel_amount;
 		this.fuel_material = fuel_material;
+		this.positiveEffects = positive;
+		this.negativeEffects = negative;
 	}
 
     public boolean usePositiveEffect(Player player) {
@@ -70,5 +78,21 @@ public class BetterBeaconsProperties
     public Faction getOwningFaction() {
         return owning_faction;
     }
+    
+    /**
+     * 'positiveEffects' public accessor
+     */
+    public ArrayList<PotionEffect> getPositiveEffects(){
+    	return positiveEffects;
+    }
+    
+    /**
+     * 'negativeEffects' public accessor
+     */
+    public ArrayList<PotionEffect> getNegativeEffects(){
+    	return negativeEffects;
+    }
+
+    
 
 }

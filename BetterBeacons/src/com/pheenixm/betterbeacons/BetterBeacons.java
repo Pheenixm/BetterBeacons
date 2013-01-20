@@ -1,10 +1,13 @@
 package com.pheenixm.betterbeacons;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 public class BetterBeacons {
 
@@ -39,7 +42,10 @@ public class BetterBeacons {
 			String faction,
 			int radius,
 			int fuel_amount,
-			Material fuel_material) {
+			Material fuel_material,
+			ArrayList<PotionEffect> positive,
+			ArrayList<PotionEffect> negative
+			) {
 		worldUuid = beaconWorld;
         // TODO: As a Location is created, this doesn't need to explicitly track
         //  x, y, z as it's redundant.
@@ -49,7 +55,7 @@ public class BetterBeacons {
 		beaconKey = BetterBeaconsManager.blockKey(this);
 		instance = plugin;
 		beaconLocation = new Location(instance.getServer().getWorld(worldUuid), (double)x, (double)y, (double)z);
-        setProperties(faction, radius, fuel_amount, fuel_material);
+        setProperties(faction, radius, fuel_amount, fuel_material, positive, negative);
 	}
 
 	public UUID getWorldUuid() {
@@ -75,8 +81,8 @@ public class BetterBeacons {
 		return properties;
 	}
 
-	public void setProperties(String faction, int radius, int fuel_amount, Material fuel_material) {
-        setProperties(new BetterBeaconsProperties(faction, radius, fuel_amount, fuel_material));
+	public void setProperties(String faction, Integer radius, int fuel_amount, Material fuel_material, ArrayList<PotionEffect> positive, ArrayList<PotionEffect> negative) {
+        setProperties(new BetterBeaconsProperties(faction, radius, fuel_amount, fuel_material, positive, negative));
     }
 
 	public void setProperties(BetterBeaconsProperties newProperties) {
@@ -129,14 +135,19 @@ public class BetterBeacons {
 
 	public void onUpdate(List<Player> players)
 	{
-		//CODE HERE TO GET GROUP AND APPLY AFFECTS. THE MEAT OF THE PLUGIN
 		for (Player player : players) {
-			if (properties.usePositiveEffect(player)) { //FUNCTION NON-EXISTENT
-				// Apply positive effect
+			if(isInRange(player))
+			{
+				if (properties.usePositiveEffect(player)) 
+				{ 
+					player.addPotionEffects(properties.getPositiveEffects());
+				} 
+				else 
+				{
+					player.addPotionEffects(properties.getNegativeEffects());
+					//TODO: Configure this to allow for blacklists as well
 
-			} else {
-				// Apply negative effect
-
+				}
 			}
 		}
 	}

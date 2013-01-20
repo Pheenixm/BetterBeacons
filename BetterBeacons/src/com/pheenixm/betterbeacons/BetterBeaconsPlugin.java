@@ -78,7 +78,7 @@ public class BetterBeaconsPlugin extends JavaPlugin
 
 
 
-		Better_Beacons_Properties.put(0, new BetterBeaconsProperties(faction, radius, fuel_amount, fuel_type));
+		Better_Beacons_Properties.put(0, new BetterBeaconsProperties(null, null, fuel_amount, fuel_type));
 		
 		BetterBeaconsPlugin.sendConsoleMessage("Config values successfully loaded!");
 		saveConfig();

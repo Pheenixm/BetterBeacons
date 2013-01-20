@@ -1,5 +1,6 @@
 package com.pheenixm.betterbeacons;
 
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.List;
 import java.util.TreeMap;
@@ -10,7 +11,6 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
 
 import com.pheenixm.betterbeacons.data.IBeaconStorage;
 import com.pheenixm.betterbeacons.data.PluginConfigBeaconStorage;
@@ -66,6 +66,9 @@ public class BetterBeaconsManager
 
 	}
 
+	/**
+	 * TODO: Cleanup this method as it could be more streamlined
+	 */
 	public void iterate()
 	{
 		for(UUID uuid : worldMap.keySet()) {
@@ -74,17 +77,20 @@ public class BetterBeaconsManager
 			Map<String, BetterBeacons> beacons = worldMap.get(world);
 			for (Player player : players) {
 				List<BetterBeacons> inRangeBeacons = new Vector<BetterBeacons>();
+				List<Player> inRangePlayers = new ArrayList<Player>();
 				for (BetterBeacons beacon : beacons.values()) {
 					if (beacon.isInRange(player)) {
 						inRangeBeacons.add(beacon);
+						inRangePlayers.add(player);
 					}
 				}
 				if (!inRangeBeacons.isEmpty()) {
 					// TODO: Calculate the effective potion effects and apply to player
-
-
-
-
+					//Nuetral Effects
+					for(BetterBeacons beacon : inRangeBeacons)
+					{
+						beacon.onUpdate(inRangePlayers);
+					}
 
 
 				}
