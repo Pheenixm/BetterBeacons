@@ -1,7 +1,7 @@
 package com.pheenixm.betterbeacons;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -18,31 +18,33 @@ public class BetterBeaconsProperties
 {
 	private final Material fuel_material; //The type of fuel consumed
 	private final int fuel_amount; //The amount of fuel consumed per mining operation
-    private final int radius; //Beacons effect radius
-    private final Faction owning_faction; // Owning Citadel group
-    private final ArrayList<PotionEffect> positiveEffects;
-    private final ArrayList<PotionEffect> negativeEffects;
+	private final int radius; //Beacons effect radius
+	private final double radius_squared; //Beacons effect square radius
+	private final Faction owning_faction; // Owning Citadel group
+	private final List<PotionEffect> positiveEffects;
+	private final List<PotionEffect> negativeEffects;
 
 	/**
 	 * Constructor
 	 */
-	public BetterBeaconsProperties(String faction, Integer radius, int fuel_amount, Material fuel_material, ArrayList<PotionEffect> positive, ArrayList<PotionEffect> negative)
+	public BetterBeaconsProperties(String faction, Integer radius, int fuel_amount, Material fuel_material, List<PotionEffect> positive, List<PotionEffect> negative)
 	{
-        this.owning_faction = Citadel.getGroupManager().getGroup(faction);
-        this.radius = radius;
+		this.owning_faction = Citadel.getGroupManager().getGroup(faction);
+		this.radius = radius;
+		this.radius_squared = ((double)radius * (double)radius);
 		this.fuel_amount = fuel_amount;
 		this.fuel_material = fuel_material;
 		this.positiveEffects = positive;
 		this.negativeEffects = negative;
 	}
 
-    public boolean usePositiveEffect(Player player) {
-        return usePositiveEffect(player.getDisplayName());
-    }
+	public boolean usePositiveEffect(Player player) {
+		return usePositiveEffect(player.getDisplayName());
+	}
 
-    public boolean usePositiveEffect(String name) {
-        return name.equals(this.owning_faction.getFounder()) || this.owning_faction.isMember(name) || this.owning_faction.isModerator(name);
-    }
+	public boolean usePositiveEffect(String name) {
+		return name.equals(this.owning_faction.getFounder()) || this.owning_faction.isMember(name) || this.owning_faction.isModerator(name);
+	}
 
 	/*
 	 ----------PUBLIC ACCESSORS--------
@@ -68,31 +70,35 @@ public class BetterBeaconsProperties
 	/**
 	 * 'radius' public accessor
 	 */
-    public int getRadius() {
-        return radius;
-    }
+	public int getRadius() {
+		return radius;
+	}
+
+	/**
+	 * 'radius_squared' public accessor
+	 */
+	public double getRadiusSquared() {
+		return radius_squared;
+	}
 
 	/**
 	 * 'owning_faction' public accessor
 	 */
-    public Faction getOwningFaction() {
-        return owning_faction;
-    }
-    
-    /**
-     * 'positiveEffects' public accessor
-     */
-    public ArrayList<PotionEffect> getPositiveEffects(){
-    	return positiveEffects;
-    }
-    
-    /**
-     * 'negativeEffects' public accessor
-     */
-    public ArrayList<PotionEffect> getNegativeEffects(){
-    	return negativeEffects;
-    }
+	public Faction getOwningFaction() {
+		return owning_faction;
+	}
 
-    
+	/**
+	 * 'positiveEffects' public accessor
+	 */
+	public List<PotionEffect> getPositiveEffects(){
+		return positiveEffects;
+	}
 
+	/**
+	 * 'negativeEffects' public accessor
+	 */
+	public List<PotionEffect> getNegativeEffects(){
+		return negativeEffects;
+	}
 }

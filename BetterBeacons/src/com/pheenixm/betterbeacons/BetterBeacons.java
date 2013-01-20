@@ -31,7 +31,7 @@ public class BetterBeacons {
 		yMax = null;
 		zMin = null;
 		zMax = null;
-    }
+	}
 
 	BetterBeacons(
 			BetterBeaconsPlugin plugin,
@@ -47,15 +47,15 @@ public class BetterBeacons {
 			ArrayList<PotionEffect> negative
 			) {
 		worldUuid = beaconWorld;
-        // TODO: As a Location is created, this doesn't need to explicitly track
-        //  x, y, z as it's redundant.
+		// TODO: As a Location is created, this doesn't need to explicitly track
+		//  x, y, z as it's redundant.
 		xCoord = x;
 		yCoord = y;
 		zCoord = z;
 		beaconKey = BetterBeaconsManager.blockKey(this);
 		instance = plugin;
 		beaconLocation = new Location(instance.getServer().getWorld(worldUuid), (double)x, (double)y, (double)z);
-        setProperties(faction, radius, fuel_amount, fuel_material, positive, negative);
+		setProperties(faction, radius, fuel_amount, fuel_material, positive, negative);
 	}
 
 	public UUID getWorldUuid() {
@@ -81,9 +81,9 @@ public class BetterBeacons {
 		return properties;
 	}
 
-	public void setProperties(String faction, Integer radius, int fuel_amount, Material fuel_material, ArrayList<PotionEffect> positive, ArrayList<PotionEffect> negative) {
-        setProperties(new BetterBeaconsProperties(faction, radius, fuel_amount, fuel_material, positive, negative));
-    }
+	public void setProperties(String faction, Integer radius, int fuel_amount, Material fuel_material, List<PotionEffect> positive, List<PotionEffect> negative) {
+		setProperties(new BetterBeaconsProperties(faction, radius, fuel_amount, fuel_material, positive, negative));
+	}
 
 	public void setProperties(BetterBeaconsProperties newProperties) {
 		properties = newProperties;
@@ -119,10 +119,10 @@ public class BetterBeacons {
 		if (zLoc < zMin || zLoc > zMax) {
 			return false;
 		}
-		return xzDistance(location, beaconLocation) <= (float)properties.getRadius();
+		return xzDistanceSquared(location, beaconLocation) <= properties.getRadiusSquared();
 	}
 
-	public float xzDistance(Location one, Location two) {
+	public double xzDistanceSquared(Location one, Location two) {
 		if (one.getWorld() != two.getWorld()) {
 			throw new IllegalArgumentException(String.format(
 				"Cannot measure distance between two worlds: '%s' '%s'",
@@ -130,29 +130,29 @@ public class BetterBeacons {
 		}
 		double dubX = Math.pow(one.getX() - two.getX(), 2);
 		double dubZ = Math.pow(one.getZ() - two.getZ(), 2);
-		return (float) Math.sqrt(dubX + dubZ);
+		return dubX + dubZ;
 	}
 
-	public void onUpdate(List<Player> players)
-	{
-		for (Player player : players) {
-			if(isInRange(player))
-			{
-				if (properties.usePositiveEffect(player)) 
-				{ 
-					player.addPotionEffects(properties.getPositiveEffects());
-				} 
-				else 
-				{
-					player.addPotionEffects(properties.getNegativeEffects());
-					//TODO: Configure this to allow for blacklists as well
+	public double xzDistance(Location one, Location two) {
+		return Math.sqrt(xzDistanceSquared(one, two));
+	}
 
-				}
-			}
+	// Caller has responsibility to verify player is in range via isInRange
+	public void onUpdate(Player player)
+	{
+		if (properties.usePositiveEffect(player))
+		{
+			player.addPotionEffects(properties.getPositiveEffects());
+		}
+		else
+		{
+			player.addPotionEffects(properties.getNegativeEffects());
+			//TODO: Configure this to allow for blacklists as well
+
 		}
 	}
 
-    // Immutable member variables
+	// Immutable member variables
 	private final UUID worldUuid;
 	private final int xCoord;
 	private final int yCoord;
@@ -161,7 +161,7 @@ public class BetterBeacons {
 	private final BetterBeaconsPlugin instance;
 	private final Location beaconLocation;
 
-    // Mutable member variables
+	// Mutable member variables
 	private BetterBeaconsProperties properties;
 	private Integer xMin;
 	private Integer xMax;

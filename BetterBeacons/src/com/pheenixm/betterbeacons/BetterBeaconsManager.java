@@ -58,17 +58,12 @@ public class BetterBeaconsManager
 	}
 
 	private void loadBeacons() {
-		List<BetterBeacons> beacons = storage.getAll();
-		// TODO: populate tickMap and worldMap
-
-
-
-
+		for (BetterBeacons beacon : storage.getAll()) {
+			tickMap.put(beacon.getKey(), beacon);
+			worldMap.get(beacon.getWorldUuid()).put(beacon.getKey(), beacon);
+		}
 	}
 
-	/**
-	 * TODO: Cleanup this method as it could be more streamlined
-	 */
 	public void iterate()
 	{
 		for(UUID uuid : worldMap.keySet()) {
@@ -77,22 +72,15 @@ public class BetterBeaconsManager
 			Map<String, BetterBeacons> beacons = worldMap.get(world);
 			for (Player player : players) {
 				List<BetterBeacons> inRangeBeacons = new Vector<BetterBeacons>();
-				List<Player> inRangePlayers = new ArrayList<Player>();
 				for (BetterBeacons beacon : beacons.values()) {
 					if (beacon.isInRange(player)) {
 						inRangeBeacons.add(beacon);
-						inRangePlayers.add(player);
 					}
 				}
-				if (!inRangeBeacons.isEmpty()) {
-					// TODO: Calculate the effective potion effects and apply to player
-					//Nuetral Effects
-					for(BetterBeacons beacon : inRangeBeacons)
-					{
-						beacon.onUpdate(inRangePlayers);
-					}
-
-
+				for(BetterBeacons beacon : inRangeBeacons)
+				{
+					// TODO: Filter out overridden beacons, when implemented
+					beacon.onUpdate(player);
 				}
 			}
 		}
