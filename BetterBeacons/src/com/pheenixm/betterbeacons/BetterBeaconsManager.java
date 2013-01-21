@@ -25,7 +25,8 @@ public class BetterBeaconsManager
 	public BetterBeaconsManager(BetterBeaconsPlugin plugin)
 	{
 		instance = plugin;
-		storage = (IBeaconStorage)new PluginConfigBeaconStorage(plugin);
+		//TODO: NullPointException here
+		//storage = (IBeaconStorage)new PluginConfigBeaconStorage(plugin);
 		plugin.getServer().getPluginManager().registerEvents(new BetterBeaconListener(plugin), plugin);
 		tickMap = new TreeMap<String, BetterBeacons>();
 		worldMap = new TreeMap<UUID, Map<String, BetterBeacons>>();
@@ -33,6 +34,8 @@ public class BetterBeaconsManager
 			worldMap.put(world.getUID(), new TreeMap<String, BetterBeacons>());
 		}
 		loadBeacons();
+		
+		instance.getServer().getPluginManager().registerEvents(new BetterBeaconListener(instance), instance);
 	}
 
 	public BetterBeacons newBeacon(Block block) {
@@ -64,6 +67,9 @@ public class BetterBeaconsManager
 		}
 	}
 
+	/**
+	 * TODO: Cleanup this method as it could be more streamlined
+	 */
 	public void iterate()
 	{
 		for(UUID uuid : worldMap.keySet()) {
@@ -77,10 +83,13 @@ public class BetterBeaconsManager
 						inRangeBeacons.add(beacon);
 					}
 				}
-				for(BetterBeacons beacon : inRangeBeacons)
-				{
-					// TODO: Filter out overridden beacons, when implemented
-					beacon.onUpdate(player);
+				if (!inRangeBeacons.isEmpty()) {
+					// TODO: Calculate the effective potion effects and apply to player
+					//Nuetral Effects
+					for(BetterBeacons beacon : inRangeBeacons)
+					{
+						beacon.onUpdate(beacon);
+					}
 				}
 			}
 		}

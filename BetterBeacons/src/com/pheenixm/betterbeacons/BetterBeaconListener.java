@@ -1,9 +1,12 @@
 package com.pheenixm.betterbeacons;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
@@ -20,13 +23,31 @@ public class BetterBeaconListener implements Listener {
 	public void onBlockInteract(PlayerInteractEvent event)
 	{
 		Block block = event.getClickedBlock();
-		if(!block.getType().equals(Material.BEACON))
+		
+		if (block == null || !block.getType().equals(Material.BEACON))
 		{
 			return;
 		}
+
 		BetterBeaconsManager manager = instance.getManager();
 		BetterBeacons beacon = manager.newBeacon(block);
 
+		
+		Action action = event.getAction();
+		Player player = event.getPlayer();
+		
+		switch (action)
+		{
+		case RIGHT_CLICK_BLOCK:
+			if (beacon != null)
+			{
+				beacon.openInventory(player);
+				event.setCancelled(true);
+			}
+			break;
+		default:
+			break;
+		}
 		// TODO: Stuff
 
 

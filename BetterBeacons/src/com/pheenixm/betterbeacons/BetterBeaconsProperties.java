@@ -1,6 +1,5 @@
 package com.pheenixm.betterbeacons;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.Material;
@@ -29,7 +28,9 @@ public class BetterBeaconsProperties
 	 */
 	public BetterBeaconsProperties(String faction, Integer radius, int fuel_amount, Material fuel_material, List<PotionEffect> positive, List<PotionEffect> negative)
 	{
+		//TODO: Set properly
 		this.owning_faction = Citadel.getGroupManager().getGroup(faction);
+		
 		this.radius = radius;
 		this.radius_squared = ((double)radius * (double)radius);
 		this.fuel_amount = fuel_amount;
