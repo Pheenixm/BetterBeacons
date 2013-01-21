@@ -25,7 +25,8 @@ public class BetterBeaconsManager
 	public BetterBeaconsManager(BetterBeaconsPlugin plugin)
 	{
 		instance = plugin;
-		storage = (IBeaconStorage)new PluginConfigBeaconStorage(plugin);
+		//TODO: NullPointException here
+		//storage = (IBeaconStorage)new PluginConfigBeaconStorage(plugin);
 		plugin.getServer().getPluginManager().registerEvents(new BetterBeaconListener(plugin), plugin);
 		tickMap = new TreeMap<String, BetterBeacons>();
 		worldMap = new TreeMap<UUID, Map<String, BetterBeacons>>();
@@ -33,6 +34,8 @@ public class BetterBeaconsManager
 			worldMap.put(world.getUID(), new TreeMap<String, BetterBeacons>());
 		}
 		loadBeacons();
+		
+		instance.getServer().getPluginManager().registerEvents(new BetterBeaconListener(instance), instance);
 	}
 
 	public BetterBeacons newBeacon(Block block) {
@@ -58,7 +61,7 @@ public class BetterBeaconsManager
 	}
 
 	private void loadBeacons() {
-		List<BetterBeacons> beacons = storage.getAll();
+		//List<BetterBeacons> beacons = storage.getAll();
 		// TODO: populate tickMap and worldMap
 
 
