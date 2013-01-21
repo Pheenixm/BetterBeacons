@@ -133,6 +133,10 @@ public class BetterBeacons {
 		return (float) Math.sqrt(dubX + dubZ);
 	}
 
+	/**
+	 * Checks if players are in range, applies effects to them
+	 * @param players
+	 */
 	public void onUpdate(List<Player> players)
 	{
 		for (Player player : players) {

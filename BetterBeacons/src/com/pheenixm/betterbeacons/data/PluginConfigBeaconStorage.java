@@ -1,5 +1,6 @@
 package com.pheenixm.betterbeacons.data;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.LinkedList;
 import java.util.UUID;
@@ -7,9 +8,9 @@ import java.util.UUID;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.potion.PotionEffect;
 
 import com.pheenixm.betterbeacons.*;
-import com.pheenixm.betterbeacons.BetterBeaconsProperties;
 import com.pheenixm.betterbeacons.data.IBeaconStorage;
 
 public class PluginConfigBeaconStorage implements IBeaconStorage {
@@ -48,7 +49,11 @@ public class PluginConfigBeaconStorage implements IBeaconStorage {
             cfg.getString("owningFaction"),
             cfg.getInt("radius"),
             cfg.getInt("fuel_amount"),
-            Material.getMaterial(cfg.getString("fuelMaterial")));
+            Material.getMaterial(cfg.getString("fuelMaterial")),
+            //TODO: Add method for getting array lists of potion effects
+            (ArrayList<PotionEffect>)cfg.getList("positiveEffects"),
+            (ArrayList<PotionEffect>)cfg.getList("negativeEffects")
+            		);
         return beacon;
     }
 
@@ -77,6 +82,7 @@ public class PluginConfigBeaconStorage implements IBeaconStorage {
         cfg.set("fuelMaterial", properties.getFuelMaterial().toString());
         cfg.set("radius", properties.getRadius());
         cfg.set("owningFaction", properties.getOwningFaction().getName());
+        //TODO: Add methods for saving array lists 
     }
 
     public void remove(BetterBeacons beacon) {
