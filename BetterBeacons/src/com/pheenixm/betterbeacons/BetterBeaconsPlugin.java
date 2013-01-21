@@ -9,11 +9,16 @@ import org.bukkit.Material;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitTask;
 
+import com.pheenixm.betterbeacons.command.commands.ListPositiveEffectsCommand;
+import com.pheenixm.betterbeacons.command.CommandHandler;
+
 public class BetterBeaconsPlugin extends JavaPlugin 
 {
+
 	private BetterBeaconsManager manager; //The BetterBeacons manager
 	public static Logger log;
 	public static HashMap<Integer,BetterBeaconsProperties> Better_Beacons_Properties; //Map of properties for all tiers
+    private static final CommandHandler commandHandler = new CommandHandler();
 
     public static final String PLUGIN_NAME = "BetterBeacons";
     public static final String VERSION = "0.1";
@@ -31,6 +36,7 @@ public class BetterBeaconsPlugin extends JavaPlugin
     public void onEnable() 
     {
     	initializeBetterBeaconsProperties();
+    	registerCommands();
     	
 		if(properPluginsLoaded())
 		{
@@ -52,6 +58,10 @@ public class BetterBeaconsPlugin extends JavaPlugin
 		log.info(PLUGIN_NAME+" v"+VERSION+" disabled!");
 	}
 	
+	public void registerCommands()
+	{
+		commandHandler.addCommand(new ListPositiveEffectsCommand());
+	}
 
 	/**
 	 * Initializes the default BetterBeaconsProperties from config

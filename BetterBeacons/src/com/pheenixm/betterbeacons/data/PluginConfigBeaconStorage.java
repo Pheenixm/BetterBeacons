@@ -12,7 +12,6 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import com.pheenixm.betterbeacons.*;
-import com.pheenixm.betterbeacons.BetterBeaconsProperties;
 import com.pheenixm.betterbeacons.data.IBeaconStorage;
 
 public class PluginConfigBeaconStorage implements IBeaconStorage {
@@ -134,6 +133,4 @@ public class PluginConfigBeaconStorage implements IBeaconStorage {
     public void flush() {
         plugin_.saveConfig();
     }
-
 }
-

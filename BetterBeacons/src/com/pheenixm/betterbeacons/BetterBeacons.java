@@ -137,9 +137,13 @@ public class BetterBeacons {
 		return Math.sqrt(xzDistanceSquared(one, two));
 	}
 
-	// Caller has responsibility to verify player is in range via isInRange
+	/**
+	 * Applies this beacon's effects to the player
+	 * @param player
+	 */
 	public void onUpdate(Player player)
 	{
+	    // Caller has responsibility to verify player is in range via isInRange
 		if (properties.usePositiveEffect(player))
 		{
 			player.addPotionEffects(properties.getPositiveEffects());
