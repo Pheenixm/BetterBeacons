@@ -61,12 +61,10 @@ public class BetterBeaconsManager
 	}
 
 	private void loadBeacons() {
-		//List<BetterBeacons> beacons = storage.getAll();
-		// TODO: populate tickMap and worldMap
-
-
-
-
+		for (BetterBeacons beacon : storage.getAll()) {
+			tickMap.put(beacon.getKey(), beacon);
+			worldMap.get(beacon.getWorldUuid()).put(beacon.getKey(), beacon);
+		}
 	}
 
 	/**
@@ -80,11 +78,9 @@ public class BetterBeaconsManager
 			Map<String, BetterBeacons> beacons = worldMap.get(world);
 			for (Player player : players) {
 				List<BetterBeacons> inRangeBeacons = new Vector<BetterBeacons>();
-				List<Player> inRangePlayers = new ArrayList<Player>();
 				for (BetterBeacons beacon : beacons.values()) {
 					if (beacon.isInRange(player)) {
 						inRangeBeacons.add(beacon);
-						inRangePlayers.add(player);
 					}
 				}
 				if (!inRangeBeacons.isEmpty()) {
@@ -92,10 +88,8 @@ public class BetterBeaconsManager
 					//Nuetral Effects
 					for(BetterBeacons beacon : inRangeBeacons)
 					{
-						beacon.onUpdate(inRangePlayers);
+						beacon.onUpdate(beacon);
 					}
-
-
 				}
 			}
 		}
