@@ -152,21 +152,24 @@ public class BetterBeacons {
 	/**
 	 * Initialize inventory using a pre-existing saved inventory copy
 	 */
-	private void initializeInventory(Inventory inventory) {
+	private void initializeInventory(Inventory inventory) 
+	{
 		this.inventory = inventory;
 	}
 	
 	/**
 	 * Initialize a brand new inventory for beacon
 	 */
-	private void initializeInventory() {
+	private void initializeInventory()
+	{
 		inventory = Bukkit.getServer().createInventory(null, inventoryRows*9, "Beacon Inventory");
 	}
 
 	/**
 	 * Opens the beacon inventory for given player
 	 */
-	public void openInventory(Player player) {
+	public void openInventory(Player player) 
+	{
 		if (inventory != null)
 			player.openInventory(inventory);
 	}

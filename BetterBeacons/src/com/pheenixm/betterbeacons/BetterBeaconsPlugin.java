@@ -23,7 +23,7 @@ public class BetterBeaconsPlugin extends JavaPlugin
     public static final String PLUGIN_NAME = "BetterBeacons";
     public static final String VERSION = "0.1";
     public static final String PLUGIN_PREFIX = PLUGIN_NAME + " " + VERSION + ": "; 
-    public static final String BETTER_BEACONS_SAVES_DIRECTORY = "OreGinSaves";
+    public static final String BETTER_BEACONS_SAVES_DIRECTORY = "BetterBeacons";
     public static final int TICKS_PER_SECOND = 20; 
 
 	public static int UPDATE_CYCLE; //Update time in ticks
@@ -55,7 +55,8 @@ public class BetterBeaconsPlugin extends JavaPlugin
     
 	public void onDisable() 
 	{
-		log.info(PLUGIN_NAME+" v"+VERSION+" disabled!");
+		//TODO: NullPointerException here, probably with log not being set
+		//log.info(PLUGIN_NAME+" v"+VERSION+" disabled!");
 	}
 	
 	public void registerCommands()
@@ -72,12 +73,17 @@ public class BetterBeaconsPlugin extends JavaPlugin
 		Better_Beacons_Properties = new HashMap<Integer,BetterBeaconsProperties>();
 
 		//Load general config values
-		BetterBeaconsPlugin.UPDATE_CYCLE = getConfig().getInt("general.update_cycle");
+		
+		//TODO: Load properly from Config
+		/*BetterBeaconsPlugin.UPDATE_CYCLE = getConfig().getInt("general.update_cycle");
 		BetterBeaconsPlugin.CITADEL_ENABLED = getConfig().getBoolean("general.citadel_enabled");
 		BetterBeaconsPlugin.SAVE_CYCLE = getConfig().getInt("general.save_cycle");
 
 		Material fuel_type = Material.valueOf("fuel_type");
-		int fuel_amount= getConfig().getInt("fuel_amount");
+		int fuel_amount= getConfig().getInt("fuel_amount");*/
+		
+		
+
 
 
 
@@ -88,7 +94,7 @@ public class BetterBeaconsPlugin extends JavaPlugin
 
 
 
-		Better_Beacons_Properties.put(0, new BetterBeaconsProperties(null, null, fuel_amount, fuel_type, null, null));
+		//Better_Beacons_Properties.put(0, new BetterBeaconsProperties(null, null, fuel_amount, fuel_type, null, null));
 		
 		BetterBeaconsPlugin.sendConsoleMessage("Config values successfully loaded!");
 		saveConfig();
@@ -97,12 +103,13 @@ public class BetterBeaconsPlugin extends JavaPlugin
 	/**
 	 * Sets up scheduling for the ticking
 	 */
-	BukkitTask task = getServer().getScheduler().runTaskTimerAsynchronously(this, new Runnable() {
+	//TODO: NullPointerException occuring, should fix
+	/*BukkitTask task = getServer().getScheduler().runTaskTimerAsynchronously(this, new Runnable() {
 	    @Override  
 	    public void run() {
 	    	manager.iterate();
 	    }
-	}, 1L, 1L);
+	}, 1L, 1L);*/
 
 	
 	/**
@@ -118,8 +125,10 @@ public class BetterBeaconsPlugin extends JavaPlugin
 	 */
 	public boolean properPluginsLoaded()
 	{
-		return ( (getServer().getPluginManager().getPlugin(CITADEL_NAME) != null && BetterBeaconsPlugin.CITADEL_ENABLED)
-				|| (getServer().getPluginManager().getPlugin(CITADEL_NAME) == null && !BetterBeaconsPlugin.CITADEL_ENABLED));
+		//TODO: Set up config properly
+		//return ( (getServer().getPluginManager().getPlugin(CITADEL_NAME) != null && BetterBeaconsPlugin.CITADEL_ENABLED)
+		//		|| (getServer().getPluginManager().getPlugin(CITADEL_NAME) == null && !BetterBeaconsPlugin.CITADEL_ENABLED));
+		return true;
 	}
 
 
