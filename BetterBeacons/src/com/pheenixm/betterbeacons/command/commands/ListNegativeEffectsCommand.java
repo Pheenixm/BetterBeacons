@@ -13,16 +13,16 @@ import com.pheenixm.betterbeacons.BetterBeaconsPlugin;
 import com.pheenixm.betterbeacons.command.CommandUtils;
 import com.pheenixm.betterbeacons.command.PlayerCommand;
 
-public class ListPositiveEffectsCommand extends PlayerCommand {
+public class ListNegativeEffectsCommand extends PlayerCommand {
 	
 	private BetterBeaconsPlugin instance;
 
-	public ListPositiveEffectsCommand(BetterBeaconsPlugin plug) {
-		super("List Positive Effects");
+	public ListNegativeEffectsCommand(BetterBeaconsPlugin plug) {
+		super("List Negative Effects");
 		instance = plug;
-		setDescription("Lists positive effects of a beacon");
-		setUsage("/bblistpositives");
-		setIdentifiers(new String[] {"bblistpositives", "bblp"});
+		setDescription("Lists negative effects of a beacon");
+		setUsage("/bblistnegatives");
+		setIdentifiers(new String[] {"bblistnegatives", "bbln"});
 	}
 
 	public boolean execute(CommandSender sender, String[] args) {
@@ -33,8 +33,8 @@ public class ListPositiveEffectsCommand extends PlayerCommand {
         	return true;
         }
         BetterBeacons beacon = instance.getManager().get(block);
-        sender.sendMessage(new StringBuilder().append("§cPositive Effects for this Beacon Are:§e ").toString());
-        for(PotionEffect effect : beacon.getProperties().getPositiveEffects())
+        sender.sendMessage(new StringBuilder().append("§cNegative Effects for this Beacon Are:§e ").toString());
+        for(PotionEffect effect : beacon.getProperties().getNegativeEffects())
         {
         	sender.sendMessage(new StringBuilder().append("§c ").append(effect.getType().getName()).toString());
         }

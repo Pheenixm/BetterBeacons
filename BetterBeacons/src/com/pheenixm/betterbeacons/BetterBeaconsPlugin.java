@@ -61,7 +61,7 @@ public class BetterBeaconsPlugin extends JavaPlugin
 	
 	public void registerCommands()
 	{
-		commandHandler.addCommand(new ListPositiveEffectsCommand());
+		commandHandler.addCommand(new ListPositiveEffectsCommand(this));
 	}
 
 	/**
