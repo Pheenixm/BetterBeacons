@@ -9,6 +9,8 @@ import org.bukkit.Material;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitTask;
 
+import com.pheenixm.betterbeacons.command.commands.ListAllEffectsCommand;
+import com.pheenixm.betterbeacons.command.commands.ListNegativeEffectsCommand;
 import com.pheenixm.betterbeacons.command.commands.ListPositiveEffectsCommand;
 import com.pheenixm.betterbeacons.command.CommandHandler;
 
@@ -35,12 +37,12 @@ public class BetterBeaconsPlugin extends JavaPlugin
     
     public void onEnable() 
     {
+    	log = this.getLogger();
     	initializeBetterBeaconsProperties();
     	registerCommands();
     	
 		if(properPluginsLoaded())
 		{
-			log = this.getLogger();
 			log.info(PLUGIN_NAME+" v"+VERSION+" enabled!");
 			getConfig().options().copyDefaults(true);
 			manager = new BetterBeaconsManager(this);
@@ -62,6 +64,8 @@ public class BetterBeaconsPlugin extends JavaPlugin
 	public void registerCommands()
 	{
 		commandHandler.addCommand(new ListPositiveEffectsCommand(this));
+		commandHandler.addCommand(new ListNegativeEffectsCommand(this));
+		commandHandler.addCommand(new ListAllEffectsCommand(this));
 	}
 
 	/**
@@ -89,7 +93,7 @@ public class BetterBeaconsPlugin extends JavaPlugin
 
         // Design conflict, I added Beacon dynamic variables into Properties
         //  and made the Beacon class itself immutable except for its assigned
-        //  properties. You'll have to decide how to refactor this for your
+        //  properties. You'll have to decide how to refractor this for your
         //  vision.
 
 
@@ -126,9 +130,8 @@ public class BetterBeaconsPlugin extends JavaPlugin
 	public boolean properPluginsLoaded()
 	{
 		//TODO: Set up config properly
-		//return ( (getServer().getPluginManager().getPlugin(CITADEL_NAME) != null && BetterBeaconsPlugin.CITADEL_ENABLED)
-		//		|| (getServer().getPluginManager().getPlugin(CITADEL_NAME) == null && !BetterBeaconsPlugin.CITADEL_ENABLED));
-		return true;
+		return ( (getServer().getPluginManager().getPlugin(CITADEL_NAME) != null && BetterBeaconsPlugin.CITADEL_ENABLED)
+				|| (getServer().getPluginManager().getPlugin(CITADEL_NAME) == null && !BetterBeaconsPlugin.CITADEL_ENABLED));
 	}
 
 

@@ -88,7 +88,7 @@ public class BetterBeaconsManager
 					//Nuetral Effects
 					for(BetterBeacons beacon : inRangeBeacons)
 					{
-						beacon.onUpdate(beacon);
+						beacon.onUpdate(players);
 					}
 				}
 			}
