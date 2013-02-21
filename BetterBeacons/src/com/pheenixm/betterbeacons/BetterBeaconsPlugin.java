@@ -12,6 +12,8 @@ import org.bukkit.scheduler.BukkitTask;
 import com.pheenixm.betterbeacons.command.commands.ListAllEffectsCommand;
 import com.pheenixm.betterbeacons.command.commands.ListNegativeEffectsCommand;
 import com.pheenixm.betterbeacons.command.commands.ListPositiveEffectsCommand;
+import com.pheenixm.betterbeacons.command.commands.SetNegativeEffectsCommand;
+import com.pheenixm.betterbeacons.command.commands.SetPositiveEffectsCommand;
 import com.pheenixm.betterbeacons.command.CommandHandler;
 
 public class BetterBeaconsPlugin extends JavaPlugin 
@@ -38,14 +40,15 @@ public class BetterBeaconsPlugin extends JavaPlugin
     public void onEnable() 
     {
     	log = this.getLogger();
+		manager = new BetterBeaconsManager(this);
     	initializeBetterBeaconsProperties();
     	registerCommands();
-    	
+    	BetterBeaconsIterator iter = new BetterBeaconsIterator(this);
+    	BukkitTask task = iter.runTaskTimer(this, 1L, 1L);
 		if(properPluginsLoaded())
 		{
 			log.info(PLUGIN_NAME+" v"+VERSION+" enabled!");
 			getConfig().options().copyDefaults(true);
-			manager = new BetterBeaconsManager(this);
 		}
 		else
 		{
@@ -66,6 +69,8 @@ public class BetterBeaconsPlugin extends JavaPlugin
 		commandHandler.addCommand(new ListPositiveEffectsCommand(this));
 		commandHandler.addCommand(new ListNegativeEffectsCommand(this));
 		commandHandler.addCommand(new ListAllEffectsCommand(this));
+		commandHandler.addCommand(new SetNegativeEffectsCommand(this));
+		commandHandler.addCommand(new SetPositiveEffectsCommand(this));
 	}
 
 	/**
@@ -107,8 +112,8 @@ public class BetterBeaconsPlugin extends JavaPlugin
 	/**
 	 * Sets up scheduling for the ticking
 	 */
-	//TODO: NullPointerException occuring, should fix
-	/*BukkitTask task = getServer().getScheduler().runTaskTimerAsynchronously(this, new Runnable() {
+	/*//TODO: NullPointerException occuring, should fix
+	BukkitTask task = getServer().getScheduler().runTaskTimerAsynchronously(this, new Runnable() {
 	    @Override  
 	    public void run() {
 	    	manager.iterate();

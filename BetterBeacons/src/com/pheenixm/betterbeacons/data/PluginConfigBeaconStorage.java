@@ -23,9 +23,13 @@ public class PluginConfigBeaconStorage implements IBeaconStorage {
     }
 
     private ConfigurationSection getConfigSection() {
-        return plugin_.getConfig().getConfigurationSection("beaconList");
-    }
-
+        ConfigurationSection config = plugin_.getConfig().getConfigurationSection("beaconList");
+        if (config == null) {
+          config = plugin_.getConfig().createSection("beaconList");
+        }
+        return config;
+      }
+    
     public boolean contains(BetterBeacons beacon) {
         return getConfigSection().contains(beacon.getKey());
     }
