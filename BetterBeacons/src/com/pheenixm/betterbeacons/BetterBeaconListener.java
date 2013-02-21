@@ -28,7 +28,7 @@ public class BetterBeaconListener implements Listener {
 		{
 			return;
 		}
-
+		System.out.println("Evoked");
 		BetterBeaconsManager manager = instance.getManager();
 		BetterBeacons beacon = manager.newBeacon(block);
 
@@ -68,7 +68,16 @@ public class BetterBeaconListener implements Listener {
 		// TODO: If Citadel integrated, check for reinforcement
 		// It may be easier to make this a higher event priority than Citadel's block break handler
 
-
+		if(instance.getManager() != null){
 		instance.getManager().remove(block);
+		System.out.println("Should work");
+		}
+		else
+		{
+			if(instance == null)
+				System.out.println("Plugin is null");
+			if(instance.getManager() == null)
+				System.out.println("Manager is null");
+		}
 	}
 }
