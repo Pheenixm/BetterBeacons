@@ -22,7 +22,7 @@ public class BetterBeaconsPlugin extends JavaPlugin
 	private BetterBeaconsManager manager; //The BetterBeacons manager
 	public static Logger log;
 	public static HashMap<Integer,BetterBeaconsProperties> Better_Beacons_Properties; //Map of properties for all tiers
-    private static final CommandHandler commandHandler = new CommandHandler();
+    private static final com.pheenixm.betterbeacons.command.CommandHandler commandHandler = new com.pheenixm.betterbeacons.command.CommandHandler();
 
     public static final String PLUGIN_NAME = "BetterBeacons";
     public static final String VERSION = "0.1";
@@ -40,15 +40,15 @@ public class BetterBeaconsPlugin extends JavaPlugin
     public void onEnable() 
     {
     	log = this.getLogger();
-		manager = new BetterBeaconsManager(this);
     	initializeBetterBeaconsProperties();
-    	registerCommands();
-    	BetterBeaconsIterator iter = new BetterBeaconsIterator(this);
-    	BukkitTask task = iter.runTaskTimer(this, 1L, 1L);
 		if(properPluginsLoaded())
 		{
 			log.info(PLUGIN_NAME+" v"+VERSION+" enabled!");
 			getConfig().options().copyDefaults(true);
+			manager = new BetterBeaconsManager(this);
+	    	registerCommands();
+	    	BetterBeaconsIterator iter = new BetterBeaconsIterator(this);
+	    	BukkitTask task = iter.runTaskTimer(this, 1L, 1L);
 		}
 		else
 		{

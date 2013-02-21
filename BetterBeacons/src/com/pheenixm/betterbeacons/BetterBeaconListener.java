@@ -70,6 +70,7 @@ public class BetterBeaconListener implements Listener {
 
 		if(instance.getManager() != null){
 		instance.getManager().remove(block);
+		System.out.println("Should work");
 		}
 		else
 		{

@@ -9,6 +9,8 @@ import java.util.Map.Entry;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.World;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -30,13 +32,9 @@ public class BetterBeacons {
 		beaconKey = BetterBeaconsManager.blockKey(this);
 		instance = plugin;
 		beaconLocation = new Location(instance.getServer().getWorld(worldUuid), (double)x, (double)y, (double)z);
-		properties = null;
-		xMin = null;
-		xMax = null;
-		yMin = null;
-		yMax = null;
-		zMin = null;
-		zMax = null;
+//		properties = null;
+		int radius = getRadius(plugin, beaconWorld, x, y, z);
+		setProperties(null, radius, 0, Material.EMERALD, new ArrayList<PotionEffect>(), new ArrayList<PotionEffect>());
 		
 		// TODO: Call initializeInventory(INVENTORY) if
 		// loading Beacon from file, whether INVENTORY is the
@@ -44,6 +42,20 @@ public class BetterBeacons {
 		initializeInventory();
 	}
 
+	/**
+	 * TODO: TRACE RADIUS TO FIND OUT WHERE IT IS INITIALLY SET
+	 * @param plugin
+	 * @param beaconWorld
+	 * @param x
+	 * @param y
+	 * @param z
+	 * @param faction
+	 * @param radius
+	 * @param fuel_amount
+	 * @param fuel_material
+	 * @param positive
+	 * @param negative
+	 */
 	BetterBeacons(
 			BetterBeaconsPlugin plugin,
 			UUID beaconWorld,
@@ -74,6 +86,74 @@ public class BetterBeacons {
 		initializeInventory();
 	}
 
+	public int getRadius(BetterBeaconsPlugin plugin, UUID worldNum, int x, int y, int z)
+	{
+		int radius = 25;
+		World world = plugin.getServer().getWorld(worldNum);
+		int lvl1 = 0;
+		for(int i = -1; i < 1; i++)
+		{
+			for(int j = -1; j < 1; j++)
+			{
+				Location loc = new Location(world, x + i, y - 1, z + j);
+				Material block = world.getBlockAt(loc).getType();
+				if(block.equals(Material.DIAMOND) || block.equals(Material.EMERALD_BLOCK) || block.equals(Material.IRON_BLOCK) || block.equals(Material.GOLD_BLOCK))
+					lvl1++;
+			}
+		}
+		if(lvl1 == 9)
+		{
+			radius = 50;
+			int lvl2 = 0;
+			for(int i = -2; i < 2; i++)
+			{
+				for(int j = -2; j < 2; j++)
+				{
+					Location loc = new Location(world, x + i, y - 2, z + j);
+					Material block = world.getBlockAt(loc).getType();
+					if(block.equals(Material.DIAMOND) || block.equals(Material.EMERALD_BLOCK) || block.equals(Material.IRON_BLOCK) || block.equals(Material.GOLD_BLOCK))
+						lvl2++;
+				}
+			}
+			if(lvl2 == 25)
+			{
+				radius = 100;
+				int lvl3 = 0;
+				for(int i = -3; i < 3; i++)
+				{
+					for(int j = -3; j < 3; j++)
+					{
+						Location loc = new Location(world, x + i, y - 3, z + j);
+						Material block = world.getBlockAt(loc).getType();
+						if(block.equals(Material.DIAMOND) || block.equals(Material.EMERALD_BLOCK) || block.equals(Material.IRON_BLOCK) || block.equals(Material.GOLD_BLOCK))
+							lvl3++;
+					}
+				}
+				if(lvl3 == 49)
+				{
+					radius = 150;
+					int lvl4 = 0;
+					for(int i = -4; i < 4; i++)
+					{
+						for(int j = -4; j < 4; j++)
+						{
+							Location loc = new Location(world, x + i, y - 4, z + j);
+							Material block = world.getBlockAt(loc).getType();
+							if(block.equals(Material.DIAMOND) || block.equals(Material.EMERALD_BLOCK) || block.equals(Material.IRON_BLOCK) || block.equals(Material.GOLD_BLOCK))
+								lvl4++;
+						}
+					}
+					if(lvl4 == 81)
+					{
+						radius = 300;
+					}
+				}
+			}
+		}
+		
+		return radius;
+	}
+	
 	public UUID getWorldUuid() {
 		return worldUuid;
 	}
