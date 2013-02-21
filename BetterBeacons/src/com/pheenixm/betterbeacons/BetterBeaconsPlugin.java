@@ -9,7 +9,11 @@ import org.bukkit.Material;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitTask;
 
+import com.pheenixm.betterbeacons.command.commands.ListAllEffectsCommand;
+import com.pheenixm.betterbeacons.command.commands.ListNegativeEffectsCommand;
 import com.pheenixm.betterbeacons.command.commands.ListPositiveEffectsCommand;
+import com.pheenixm.betterbeacons.command.commands.SetNegativeEffectsCommand;
+import com.pheenixm.betterbeacons.command.commands.SetPositiveEffectsCommand;
 import com.pheenixm.betterbeacons.command.CommandHandler;
 
 public class BetterBeaconsPlugin extends JavaPlugin 
@@ -18,7 +22,7 @@ public class BetterBeaconsPlugin extends JavaPlugin
 	private BetterBeaconsManager manager; //The BetterBeacons manager
 	public static Logger log;
 	public static HashMap<Integer,BetterBeaconsProperties> Better_Beacons_Properties; //Map of properties for all tiers
-    private static final CommandHandler commandHandler = new CommandHandler();
+    private static final com.pheenixm.betterbeacons.command.CommandHandler commandHandler = new com.pheenixm.betterbeacons.command.CommandHandler();
 
     public static final String PLUGIN_NAME = "BetterBeacons";
     public static final String VERSION = "0.1";
@@ -35,15 +39,16 @@ public class BetterBeaconsPlugin extends JavaPlugin
     
     public void onEnable() 
     {
+    	log = this.getLogger();
     	initializeBetterBeaconsProperties();
-    	registerCommands();
-    	
 		if(properPluginsLoaded())
 		{
-			log = this.getLogger();
 			log.info(PLUGIN_NAME+" v"+VERSION+" enabled!");
 			getConfig().options().copyDefaults(true);
 			manager = new BetterBeaconsManager(this);
+	    	registerCommands();
+	    	BetterBeaconsIterator iter = new BetterBeaconsIterator(this);
+	    	BukkitTask task = iter.runTaskTimer(this, 1L, 1L);
 		}
 		else
 		{
@@ -62,6 +67,10 @@ public class BetterBeaconsPlugin extends JavaPlugin
 	public void registerCommands()
 	{
 		commandHandler.addCommand(new ListPositiveEffectsCommand(this));
+		commandHandler.addCommand(new ListNegativeEffectsCommand(this));
+		commandHandler.addCommand(new ListAllEffectsCommand(this));
+		commandHandler.addCommand(new SetNegativeEffectsCommand(this));
+		commandHandler.addCommand(new SetPositiveEffectsCommand(this));
 	}
 
 	/**
@@ -89,7 +98,7 @@ public class BetterBeaconsPlugin extends JavaPlugin
 
         // Design conflict, I added Beacon dynamic variables into Properties
         //  and made the Beacon class itself immutable except for its assigned
-        //  properties. You'll have to decide how to refactor this for your
+        //  properties. You'll have to decide how to refractor this for your
         //  vision.
 
 
@@ -103,8 +112,8 @@ public class BetterBeaconsPlugin extends JavaPlugin
 	/**
 	 * Sets up scheduling for the ticking
 	 */
-	//TODO: NullPointerException occuring, should fix
-	/*BukkitTask task = getServer().getScheduler().runTaskTimerAsynchronously(this, new Runnable() {
+	/*//TODO: NullPointerException occuring, should fix
+	BukkitTask task = getServer().getScheduler().runTaskTimerAsynchronously(this, new Runnable() {
 	    @Override  
 	    public void run() {
 	    	manager.iterate();
@@ -126,9 +135,8 @@ public class BetterBeaconsPlugin extends JavaPlugin
 	public boolean properPluginsLoaded()
 	{
 		//TODO: Set up config properly
-		//return ( (getServer().getPluginManager().getPlugin(CITADEL_NAME) != null && BetterBeaconsPlugin.CITADEL_ENABLED)
-		//		|| (getServer().getPluginManager().getPlugin(CITADEL_NAME) == null && !BetterBeaconsPlugin.CITADEL_ENABLED));
-		return true;
+		return ( (getServer().getPluginManager().getPlugin(CITADEL_NAME) != null && BetterBeaconsPlugin.CITADEL_ENABLED)
+				|| (getServer().getPluginManager().getPlugin(CITADEL_NAME) == null && !BetterBeaconsPlugin.CITADEL_ENABLED));
 	}
 
 
