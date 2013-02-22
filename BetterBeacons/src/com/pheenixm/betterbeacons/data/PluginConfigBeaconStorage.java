@@ -35,10 +35,18 @@ public class PluginConfigBeaconStorage implements IBeaconStorage {
     }
 
     public BetterBeacons get(ConfigurationSection cfg) {
-        UUID worldUuid = UUID.fromString(cfg.getString("worldUuid"));
-        int x = cfg.getInt("x");
-        int y = cfg.getInt("y");
-        int z = cfg.getInt("z");
+        UUID worldUuid;
+        try {
+            worldUuid = UUID.fromString(cfg.getString("worldUuid"));
+        } catch(IllegalArgumentException ex) {
+            return null;
+        }
+        int x = cfg.getInt("x", Integer.MAX_VALUE);
+        int y = cfg.getInt("y", Integer.MAX_VALUE);
+        int z = cfg.getInt("z", Integer.MAX_VALUE);
+        if (x == Integer.MAX_VALUE || y < 1 || y > 256 || z == Integer.MAX_VALUE) {
+            return null;
+        }
         return get(worldUuid, x, y, z);
     }
 
@@ -51,10 +59,10 @@ public class PluginConfigBeaconStorage implements IBeaconStorage {
         }
         BetterBeacons beacon = plugin_.getManager().newBeaconNoSave(worldUuid, x, y, z);
         beacon.setProperties(
-            cfg.getString("owningFaction"),
-            cfg.getInt("radius"),
-            cfg.getInt("fuel_amount"),
-            Material.getMaterial(cfg.getString("fuelMaterial")),
+            cfg.getString("owningFaction", ""),
+            cfg.getInt("radius", 0),
+            cfg.getInt("fuel_amount", 0),
+            Material.getMaterial(cfg.getString("fuelMaterial", "SPONGE")),
             loadEffects(cfg, "positive_effects"),
             loadEffects(cfg, "negative_effects"));
         return beacon;
@@ -64,6 +72,9 @@ public class PluginConfigBeaconStorage implements IBeaconStorage {
             ConfigurationSection root, String effects_category) {
         List<PotionEffect> effects = new LinkedList<PotionEffect>();
         ConfigurationSection cfg = root.getConfigurationSection(effects_category);
+        if (cfg == null) {
+            return Collections.unmodifiableList(effects);
+        }
         for (String effect_name : cfg.getKeys(false)) {
             PotionEffectType effect_type = PotionEffectType.getByName(effect_name);
             if (effect_type == null) {
@@ -72,8 +83,8 @@ public class PluginConfigBeaconStorage implements IBeaconStorage {
                 continue;
             }
             ConfigurationSection effect_cfg = cfg.getConfigurationSection(effect_name);
-            int amplifier = effect_cfg.getInt("amplifier");
-            int duration = effect_cfg.getInt("duration");
+            int amplifier = effect_cfg.getInt("amplifier", 0);
+            int duration = effect_cfg.getInt("duration", 1);
             PotionEffect pot_effect = new PotionEffect(
                     effect_type, duration, amplifier, false);
             effects.add(pot_effect);
@@ -111,17 +122,26 @@ public class PluginConfigBeaconStorage implements IBeaconStorage {
 
         ConfigurationSection positive_effect_store = cfg.getConfigurationSection(
                 "positive_effects");
+        if (positive_effect_store == null) {
+            positive_effect_store = cfg.createSection("positive_effects");
+        }
         saveEffects(positive_effect_store, properties.getPositiveEffects());
 
         ConfigurationSection negative_effect_store = cfg.getConfigurationSection(
                 "negative_effects");
+        if (negative_effect_store == null) {
+            negative_effect_store = cfg.createSection("negative_effects");
+        }
         saveEffects(negative_effect_store, properties.getNegativeEffects());
     }
 
     private void saveEffects(ConfigurationSection cfg, List<PotionEffect> effects) {
         for (PotionEffect effect : effects) {
-            ConfigurationSection effect_cfg = cfg.getConfigurationSection(
-                    effect.getType().getName());
+            String sectionName = effect.getType().getName();
+            ConfigurationSection effect_cfg = cfg.getConfigurationSection(sectionName);
+            if (effect_cfg == null) {
+                effect_cfg = cfg.createSection(sectionName);
+            }
             effect_cfg.set("amplifier", effect.getAmplifier());
             effect_cfg.set("duration", effect.getDuration());
         }
