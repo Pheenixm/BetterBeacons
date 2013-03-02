@@ -1,3 +1,4 @@
 name: BetterBeacons
 main: com.pheenixm.betterbeacons.BetterBeaconsPlugin
 version: 0.1
+depend: [Citadel]

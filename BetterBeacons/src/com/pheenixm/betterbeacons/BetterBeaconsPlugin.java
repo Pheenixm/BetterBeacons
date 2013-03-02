@@ -6,6 +6,8 @@ import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitTask;
 
@@ -32,10 +34,13 @@ public class BetterBeaconsPlugin extends JavaPlugin
 
 	public static int UPDATE_CYCLE; //Update time in ticks
 	public static int SAVE_CYCLE; //The time between periodic saves in minutes
-	public static boolean CITADEL_ENABLED; //Whether the plugin 'Citadel' is enabled on this server
+	public static boolean CITADEL_ENABLED = true; //Citadel will always be enabled
 
 	public static final String CITADEL_NAME = "Citadel"; //The plugin name for 'Citadel'
 
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args){
+        return commandHandler.dispatch(sender, label, args);
+    }
     
     public void onEnable() 
     {
@@ -52,7 +57,7 @@ public class BetterBeaconsPlugin extends JavaPlugin
 		}
 		else
 		{
-		BetterBeaconsPlugin.sendConsoleMessage("The Citadel config value is not correct for loaded plugins! Disabling OreGin now!");
+		BetterBeaconsPlugin.sendConsoleMessage("The Citadel config value is not correct for loaded plugins! Disabling BetterBeacons now!");
 		getServer().getPluginManager().disablePlugin(this);
 		}
 

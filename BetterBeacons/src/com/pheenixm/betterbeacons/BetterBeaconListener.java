@@ -29,6 +29,18 @@ public class BetterBeaconListener implements Listener {
 			return;
 		}
 		System.out.println("Evoked");
+		
+		if(instance.getManager() != null){
+		System.out.println("Should work");
+		}
+		else
+		{
+			if(instance == null)
+				System.out.println("Plugin is null");
+			if(instance.getManager() == null)
+				System.out.println("Manager is null");
+		}
+		
 		BetterBeaconsManager manager = instance.getManager();
 		BetterBeacons beacon = manager.newBeacon(block);
 

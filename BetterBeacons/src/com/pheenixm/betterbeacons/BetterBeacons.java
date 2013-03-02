@@ -301,15 +301,19 @@ public class BetterBeacons {
 		for (Player player : players) {
 			if(isInRange(player))
 			{
-				if (properties.usePositiveEffect(player)) 
-				{ 
-					player.addPotionEffects(properties.getPositiveEffects());
-				} 
-				else 
+				if(properties != null)
 				{
-					player.addPotionEffects(properties.getNegativeEffects());
-					//TODO: Configure this to allow for blacklists as well
-
+					if (properties.usePositiveEffect(player)) 
+					{ 
+						if(properties.getPositiveEffects() != null)
+							player.addPotionEffects(properties.getPositiveEffects());
+					} 
+					else 
+					{
+						if(properties.getNegativeEffects() != null)
+							player.addPotionEffects(properties.getNegativeEffects());
+						//TODO: Configure this to allow for blacklists as well
+					}
 				}
 			}
 		}

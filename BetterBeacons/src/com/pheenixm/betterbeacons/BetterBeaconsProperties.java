@@ -44,7 +44,10 @@ public class BetterBeaconsProperties
 	}
 
 	public boolean usePositiveEffect(String name) {
-		return name.equals(this.owning_faction.getFounder()) || this.owning_faction.isMember(name) || this.owning_faction.isModerator(name);
+		if(owning_faction != null)
+			return name.equals(this.owning_faction.getFounder()) || this.owning_faction.isMember(name) || this.owning_faction.isModerator(name);
+		else
+			return false;
 	}
 
 	/*
