@@ -41,13 +41,11 @@ public class BetterBeaconListener implements Listener {
 				System.out.println("Manager is null");
 		}
 		
-		BetterBeaconsManager manager = instance.getManager();
-		BetterBeacons beacon = manager.newBeacon(block);
-
-		
-		Action action = event.getAction();
 		Player player = event.getPlayer();
-		
+		BetterBeaconsManager manager = instance.getManager();
+		BetterBeacons beacon = manager.newBeacon(player.getDisplayName(), block);
+
+		Action action = event.getAction();
 		switch (action)
 		{
 		case RIGHT_CLICK_BLOCK:

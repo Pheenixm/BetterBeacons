@@ -39,26 +39,26 @@ public class BetterBeaconsManager
 		
 	}
 
-	public BetterBeacons newBeacon(Block block) {
-		return newBeacon(block.getLocation());
+	public BetterBeacons newBeacon(String faction, Block block) {
+		return newBeacon(faction, block.getLocation());
 	}
 
-	public BetterBeacons newBeacon(Location location) {
-		return newBeacon(location.getWorld().getUID(), location.getBlockX(), location.getBlockY(), location.getBlockZ());
+	public BetterBeacons newBeacon(String faction, Location location) {
+		return newBeacon(faction, location.getWorld().getUID(), location.getBlockX(), location.getBlockY(), location.getBlockZ());
 	}
 
-	public BetterBeacons newBeacon(UUID worldUuid, int x, int y, int z) {
-		BetterBeacons beacon = newBeaconNoSave(worldUuid, x, y, z);
+	public BetterBeacons newBeacon(String faction, UUID worldUuid, int x, int y, int z) {
+		BetterBeacons beacon = newBeaconNoSave(faction, worldUuid, x, y, z);
 		save(beacon);
 		return beacon;
 	}
 
-	public BetterBeacons newBeaconNoSave(UUID worldUuid, int x, int y, int z) {
+	public BetterBeacons newBeaconNoSave(String faction, UUID worldUuid, int x, int y, int z) {
 		Location location = new Location(this.instance.getServer().getWorld(worldUuid), x, y, z);
 		if (hasSave(location)) {
 			return tickMap.get(BetterBeaconsManager.blockKey(location));
 		}
-		return new BetterBeacons(this.instance, worldUuid, x, y, z);
+		return new BetterBeacons(this.instance, faction, worldUuid, x, y, z);
 	}
 
 	private void loadBeacons() {

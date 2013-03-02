@@ -14,6 +14,8 @@ import org.bukkit.potion.PotionEffectType;
 import com.pheenixm.betterbeacons.*;
 import com.pheenixm.betterbeacons.data.IBeaconStorage;
 
+import com.untamedears.citadel.entity.Faction;
+
 public class PluginConfigBeaconStorage implements IBeaconStorage {
     private BetterBeaconsPlugin plugin_;
 
@@ -57,9 +59,10 @@ public class PluginConfigBeaconStorage implements IBeaconStorage {
         if (cfg == null) {
             return null;
         }
-        BetterBeacons beacon = plugin_.getManager().newBeaconNoSave(worldUuid, x, y, z);
+        String faction = cfg.getString("owningFaction", "");
+        BetterBeacons beacon = plugin_.getManager().newBeaconNoSave(faction, worldUuid, x, y, z);
         beacon.setProperties(
-            cfg.getString("owningFaction", ""),
+            faction,
             cfg.getInt("radius", 0),
             cfg.getInt("fuel_amount", 0),
             Material.getMaterial(cfg.getString("fuelMaterial", "SPONGE")),
@@ -118,7 +121,12 @@ public class PluginConfigBeaconStorage implements IBeaconStorage {
         cfg.set("fuelAmount", properties.getFuelAmount());
         cfg.set("fuelMaterial", properties.getFuelMaterial().toString());
         cfg.set("radius", properties.getRadius());
-        cfg.set("owningFaction", properties.getOwningFaction().getName());
+        Faction owner = properties.getOwningFaction();
+        String factionName = null;
+        if (owner != null) {
+            factionName = owner.getName();
+        }
+        cfg.set("owningFaction", factionName);
 
         ConfigurationSection positive_effect_store = cfg.getConfigurationSection(
                 "positive_effects");
