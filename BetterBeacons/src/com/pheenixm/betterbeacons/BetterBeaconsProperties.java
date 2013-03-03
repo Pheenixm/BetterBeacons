@@ -28,9 +28,11 @@ public class BetterBeaconsProperties
 	 */
 	public BetterBeaconsProperties(String faction, Integer radius, int fuel_amount, Material fuel_material, List<PotionEffect> positive, List<PotionEffect> negative)
 	{
-		//TODO: Set properly
-		this.owning_faction = Citadel.getGroupManager().getGroup(faction);
-		
+		Faction group = Citadel.getGroupManager().getGroup(faction);
+		if (group == null) {
+			group = Citadel.getMemberManager().getMember(faction).getPersonalGroup();
+		}
+		this.owning_faction = group;
 		this.radius = radius;
 		this.radius_squared = ((double)radius * (double)radius);
 		this.fuel_amount = fuel_amount;

@@ -17,10 +17,13 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+import com.untamedears.citadel.entity.Faction;
+
 public class BetterBeacons {
 
 	BetterBeacons(
 			BetterBeaconsPlugin plugin,
+			String faction,
 			UUID beaconWorld,
 			int x,
 			int y,
@@ -34,8 +37,10 @@ public class BetterBeacons {
 		beaconLocation = new Location(instance.getServer().getWorld(worldUuid), (double)x, (double)y, (double)z);
 //		properties = null;
 		int radius = getRadius(plugin, beaconWorld, x, y, z);
-		setProperties(null, radius, 0, Material.EMERALD, new ArrayList<PotionEffect>(), new ArrayList<PotionEffect>());
-		
+		setProperties(
+			faction, radius, 0, Material.EMERALD,
+			new ArrayList<PotionEffect>(), new ArrayList<PotionEffect>());
+
 		// TODO: Call initializeInventory(INVENTORY) if
 		// loading Beacon from file, whether INVENTORY is the
 		// previously saved copy of Beacon inventory
@@ -218,7 +223,7 @@ public class BetterBeacons {
 		return xzDistanceSquared(location, beaconLocation) <= properties.getRadiusSquared();
 	}
 
-    public double xzDistanceSquared(Location one, Location two) {
+	public double xzDistanceSquared(Location one, Location two) {
 		if (one.getWorld() != two.getWorld()) {
 			throw new IllegalArgumentException(String.format(
 				"Cannot measure distance between two worlds: '%s' '%s'",
@@ -230,8 +235,8 @@ public class BetterBeacons {
 	}
 
 	public double xzDistance(Location one, Location two) {
-        return Math.sqrt(xzDistanceSquared(one, two));
-    }
+		return Math.sqrt(xzDistanceSquared(one, two));
+	}
 
 	/**
 	 * Initialize inventory using a pre-existing saved inventory copy
